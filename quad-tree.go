@@ -9,7 +9,7 @@ import (
 type QuadTree struct {
 	ID               string
 	IsLeaf           bool
-	maxPoints        int
+	maxPoints        float64
 	maxDepth         int
 	Depth            int
 	splitSteps       int
@@ -24,7 +24,7 @@ type QuadTree struct {
 	ChildBottomRight *QuadTree
 }
 
-func NewQuadTree(topLeft Point, bottomRight Point, minXLength float64, minYLength float64, maxPoints int,
+func NewQuadTree(topLeft Point, bottomRight Point, minXLength float64, minYLength float64, maxPoints float64,
 	maxDepth int, initPoints []Point) (QuadTree, error) {
 	if topLeft.X >= bottomRight.X {
 		err := errors.New("X of top left point is larger or equal to X of bottom right point")
@@ -104,7 +104,7 @@ func (tree QuadTree) Print(prefix string) {
 
 func (tree QuadTree) checkSplit() bool {
 	cond1 := (tree.BottomRight.X-tree.TopLeft.X) > 2*tree.minXLength && (tree.BottomRight.Y-tree.TopLeft.Y) > 2*tree.minYLength
-	total := 0
+	total := float64(0)
 	for _, point := range tree.Points {
 		total += point.Weight
 	}
