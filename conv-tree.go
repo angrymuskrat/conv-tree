@@ -10,7 +10,7 @@ import (
 type ConvTree struct {
 	ID               string
 	IsLeaf           bool
-	MaxPoints        int
+	MaxPoints        float64
 	MaxDepth         int
 	Depth            int
 	GridSize         int
@@ -27,7 +27,7 @@ type ConvTree struct {
 	ChildBottomRight *ConvTree
 }
 
-func NewConvTree(topLeft Point, bottomRight Point, minXLength float64, minYLength float64, maxPoints int, maxDepth int,
+func NewConvTree(topLeft Point, bottomRight Point, minXLength float64, minYLength float64, maxPoints float64, maxDepth int,
 	convNumber int, gridSize int, kernel [][]float64, initPoints []Point) (ConvTree, error) {
 	if topLeft.X >= bottomRight.X {
 		err := errors.New("X of top left point is larger or equal to X of bottom right point")
@@ -403,7 +403,7 @@ func (tree *ConvTree) Clear() {
 
 func (tree ConvTree) checkSplit() bool {
 	cond1 := (tree.BottomRight.X-tree.TopLeft.X) > 2*tree.MinXLength && (tree.TopLeft.Y-tree.BottomRight.Y) > 2*tree.MinYLength
-	totalWeight := 0
+	totalWeight := float64(0)
 	for _, point := range tree.Points {
 		totalWeight += point.Weight
 	}
@@ -411,8 +411,8 @@ func (tree ConvTree) checkSplit() bool {
 	return cond1 && cond2
 }
 
-func (tree ConvTree) getNodeWeight(xLeft, xRight, yTop, yBottom float64) int {
-	total := 0
+func (tree ConvTree) getNodeWeight(xLeft, xRight, yTop, yBottom float64) float64 {
+	total := float64(0)
 	for _, point := range tree.Points {
 		if point.X >= xLeft && point.X <= xRight && point.Y >= yBottom && point.Y <= yTop {
 			total += point.Weight
